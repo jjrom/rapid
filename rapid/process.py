@@ -42,10 +42,8 @@ class ProcessAPI():
             if config and key in config:
                 self.config[key] = config[key]
         
-        self.processAPIUrl = self.config['RESTO_API_ENDPOINT'] + '/oapi-p/processes'
+        self.processAPIUrl = self.config['RESTO_API_ENDPOINT'] + '/oapi-p'
         
-        print(self.config)
- 
         
     def deploy(self, process_metadata, execution_unit):
         """
@@ -61,11 +59,26 @@ class ProcessAPI():
             'executionUnit': execution_unit
         }
         
-        return requests.post(self.processAPIUrl,
+        return requests.post(self.processAPIUrl + '/processes',
         	data=json.dumps(body),
         	headers={
                 'Content-Type': 'application/json',
                 'Content-Length': str(len(body)),
+                'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
+            }
+        )
+
+    def undeploy(self, process_id):
+        """
+        Undeploy process
+
+        @params
+            process_id           -- Process identifier
+        """
+        
+        return requests.delete(self.processAPIUrl + '/processes/' + process_id,
+        	headers={
+                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
             }
         )
