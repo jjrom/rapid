@@ -45,38 +45,72 @@ class ProcessAPI():
         self.processAPIUrl = self.config['RESTO_API_ENDPOINT'] + '/oapi-p'
         
         
-    def deploy(self, process_metadata, execution_unit):
+    def deploy(self, application_package):
         """
         Deploy input process as an Application Package to resto endpoint
 
         @params
-            process_metadata    -- Process metadata
-            execution_unit      -- Execution unit metadata
+            application_package     -- Application package
         """
-        
-        body = {
-            'processDescription': process_metadata,
-            'executionUnit': execution_unit
-        }
-        
         return requests.post(self.processAPIUrl + '/processes',
-        	data=json.dumps(body),
+        	data=json.dumps(application_package),
         	headers={
                 'Content-Type': 'application/json',
-                'Content-Length': str(len(body)),
                 'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
             }
         )
 
+    def replace(self, process_id, application_package):
+        """
+        Replace process 
+
+        @params
+            process_id              -- Process identifier
+            application_package     -- Application package
+            
+        """
+        return requests.put(self.processAPIUrl + '/processes/' + process_id,
+        	data=json.dumps(application_package),
+        	headers={
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
+            }
+        )
+        
     def undeploy(self, process_id):
         """
         Undeploy process
 
         @params
-            process_id           -- Process identifier
+            process_id              -- Process identifier
         """
         
         return requests.delete(self.processAPIUrl + '/processes/' + process_id,
+        	headers={
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
+            }
+        )
+        
+    def setJobStatus(self, process_id, status, progress=None):
+        """
+        Update the status of a process
+
+        @params
+            process_id              -- Process identifier
+            status                  -- Status - one of "accepted", "running", "successful", "failed", "dismissed"
+            progress                -- Progress of the running job (in %)
+        """
+        
+        body = {
+            'status': status
+        }
+        
+        if progress:
+            body['progress'] = progress
+            
+        return requests.put(self.processAPIUrl + '/processes/' + process_id,
+            data=json.dumps(body),
         	headers={
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
