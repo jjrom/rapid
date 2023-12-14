@@ -1,4 +1,4 @@
 .eggs
 venv
 build
-rapid.egg-info
+resto_api.egg-info
