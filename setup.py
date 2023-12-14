@@ -1,9 +1,9 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='resto-api',
+    name='jjromrapid',
     packages=find_packages(include=['rapid']),
-    version='0.0.1',
+    version='0.0.3',
     description='resto python API',
     author='Jérôme Gasperi',
     install_requires=[
