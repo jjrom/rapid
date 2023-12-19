@@ -1,4 +1,5 @@
 .eggs
+dist
 venv
 build
 jjromrapid.egg-info
