@@ -4,6 +4,7 @@ Copyright 2023 Jerome Gasperi
 @author: jerome.gasperi@gmail.com
 """
 import requests
+import jwt
 import json
 import os
 import rapid.settings as settings
@@ -92,27 +93,39 @@ class ProcessAPI():
             }
         )
         
-    def setJobStatus(self, process_id, status, progress=None):
+    def updateJob(self, token, _body):
         """
-        Update the status of a process
+        Update a job
 
         @params
-            process_id              -- Process identifier
-            status                  -- Status - one of "accepted", "running", "successful", "failed", "dismissed"
-            progress                -- Progress of the running job (in %)
+            token                   -- Job Process identifier
+            body                    -- Job properties to update
         """
         
-        body = {
-            'status': status
-        }
+        # Set body from valid inputs
+        body = {}
+        for property in ['status', 'progress']:
+            if property in _body and _body['property'] != None:
+                body[property]= _body['status']
         
-        if progress:
-            body['progress'] = progress
-            
-        return requests.put(self.processAPIUrl + '/processes/' + process_id,
+        # Decode token to retrieve callback url
+        callback = None
+        try:
+            jwt.decode(token, options={"verify_signature": False})
+            payload = jwt.decode(token, options={"verify_signature": False})
+            if 'data' in payload and 'callback' in payload['data']:
+                callback = payload['data']['callback']
+        except:
+            pass
+        
+        if callback is None:
+            print('[ERROR] Invalid authorization token')
+            return None
+        
+        return requests.put(callback,
+            params={'token':token},
             data=json.dumps(body),
         	headers={
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
+                'Content-Type': 'application/json'
             }
         )
