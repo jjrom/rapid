@@ -104,7 +104,7 @@ class ProcessAPI():
         
         # Set body from valid inputs
         body = {}
-        for property in ['status', 'progress']:
+        for property in ['status', 'progress', 'result']:
             if property in _body and _body[property] != None:
                 body[property]= _body[property]
         
