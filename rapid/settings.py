@@ -11,23 +11,11 @@ Copyright 2023 Jerome Gasperi
 
 config = {
 
-    #  =======================
-    #  General configuration
-    #  =======================
-    'RESTO_API_ENDPOINT': 'http://localhost:5252',
+    #  Endpoint to OGC API Processes service landing page
+    'PROCESS_API_ENDPOINT': 'http://localhost:5252/oapi-p',
     
-    #  =======================
-    #  OGC API Processes
-    #  =======================
     # Authorization token to deploy process
-    'RESTO_PROCESS_API_AUTH_TOKEN': 'eyJzdWIiOiIxMDAiLCJpYXQiOjE3MDIzODg1OTIsImV4cCI6MjU2NjM4ODU5Mn0.qywT1iki4QsgZdPJTO3bWU2GuWTVf6UDs1ztaBodsk8',
-
-    # Target S3 bucket configuration to store/provide results - results is local minio
-    'RESTO_PROCESS_API_S3_HOST': '',
-    'RESTO_PROCESS_API_S3_BUCKET': 'process',
-    'RESTO_PROCESS_API_S3_KEY': 'XXXXXXXXXXXXXXXXX',
-    'RESTO_PROCESS_API_S3_SECRET': 'YYYYYYYYYYYYYY',
-    'RESTO_PROCESS_API_S3_REGION': 'eu-central-1'
+    'PROCESS_API_AUTH_TOKEN': 'eyJzdWIiOiIxMDAiLCJpYXQiOjE3MDIzODg1OTIsImV4cCI6MjU2NjM4ODU5Mn0.qywT1iki4QsgZdPJTO3bWU2GuWTVf6UDs1ztaBodsk8',
 
 }
 

@@ -18,33 +18,20 @@ class ProcessAPI():
         @params
             config          --  Superseed settings.config / environnment variables
                                 Allowed variables are :
-                                    RESTO_API_ENDPOINT
-                                    RESTO_PROCESS_API_AUTH_TOKEN
-                                    RESTO_PROCESS_API_S3_HOST
-                                    RESTO_PROCESS_API_S3_BUCKET
-                                    RESTO_PROCESS_API_S3_KEY
-                                    RESTO_PROCESS_API_S3_SECRET
-                                    RESTO_PROCESS_API_S3_REGION
+                                    PROCESS_API_ENDPOINT
+                                    PROCESS_API_AUTH_TOKEN
         """
         
         self.config = {}
         
         configKeys = [
-            'RESTO_API_ENDPOINT',
-            'RESTO_PROCESS_API_AUTH_TOKEN',
-            'RESTO_PROCESS_API_S3_HOST',
-            'RESTO_PROCESS_API_S3_BUCKET',
-            'RESTO_PROCESS_API_S3_KEY',
-            'RESTO_PROCESS_API_S3_SECRET',
-            'RESTO_PROCESS_API_S3_REGION'
+            'PROCESS_API_ENDPOINT',
+            'PROCESS_API_AUTH_TOKEN'
         ]
         for key in configKeys:
             self.config[key] = os.environ.get(key) if os.environ.get(key) else settings.config[key]
             if config and key in config:
                 self.config[key] = config[key]
-        
-        self.processAPIUrl = self.config['RESTO_API_ENDPOINT'] + '/oapi-p'
-        
         
     def deploy(self, application_package):
         """
@@ -53,11 +40,11 @@ class ProcessAPI():
         @params
             application_package     -- Application package
         """
-        return requests.post(self.processAPIUrl + '/processes',
+        return requests.post(self.config['PROCESS_API_ENDPOINT'] + '/processes',
         	data=json.dumps(application_package),
         	headers={
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
+                'Authorization': 'Bearer ' + (self.config['PROCESS_API_AUTH_TOKEN'] if self.config['PROCESS_API_AUTH_TOKEN'] != None else 'none')
             }
         )
 
@@ -70,11 +57,11 @@ class ProcessAPI():
             application_package     -- Application package
             
         """
-        return requests.put(self.processAPIUrl + '/processes/' + process_id,
+        return requests.put(self.config['PROCESS_API_ENDPOINT'] + '/processes/' + process_id,
         	data=json.dumps(application_package),
         	headers={
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
+                'Authorization': 'Bearer ' + (self.config['PROCESS_API_AUTH_TOKEN'] if self.config['PROCESS_API_AUTH_TOKEN'] != None else 'none')
             }
         )
         
@@ -86,10 +73,10 @@ class ProcessAPI():
             process_id              -- Process identifier
         """
         
-        return requests.delete(self.processAPIUrl + '/processes/' + process_id,
+        return requests.delete(self.config['PROCESS_API_ENDPOINT'] + '/processes/' + process_id,
         	headers={
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + (self.config['RESTO_PROCESS_API_AUTH_TOKEN'] if self.config['RESTO_PROCESS_API_AUTH_TOKEN'] != None else 'none')
+                'Authorization': 'Bearer ' + (self.config['PROCESS_API_AUTH_TOKEN'] if self.config['PROCESS_API_AUTH_TOKEN'] != None else 'none')
             }
         )
         
