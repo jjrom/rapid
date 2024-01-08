@@ -20,4 +20,4 @@ Install virtual environnment :
     python3 -m twine upload --repository jjromrapid dist/*    
 
     # Install library from local build
-    pip install ./dist/resto_api-0.0.1-py3-none-any.whl --force-reinstall
+    pip install ./dist/jjromrapid-0.1.0-py3-none-any.whl --force-reinstall
